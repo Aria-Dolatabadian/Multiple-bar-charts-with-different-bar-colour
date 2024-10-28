@@ -29,19 +29,23 @@ for ax, sheet_name, max_x, label in zip(axes, xls.sheet_names, max_x_limits, lab
     print(f"Columns in sheet '{sheet_name}': {df.columns.tolist()}")
 
     # Create a horizontal bar chart
-    ax.barh(df['GO term'], df['Number of genes'], color=df['color'])
+    bars = ax.barh(df['GO term'], df['Number of genes'], color=df['color'])
 
     # Set the title and labels
     ax.set_title(sheet_name)
     ax.set_xlabel('Number of Genes')
     ax.set_ylabel('GO term')
-
     # Set x-axis limits according to specified values
     ax.set_xlim(0, max_x)  # Set limit based on predefined max for each chart
 
     # Adjust the font size for better visibility
     ax.tick_params(axis='y', labelsize=10)  # Change y-axis label size
     ax.set_yticklabels(df['GO term'], fontsize=10)  # Adjust y-axis labels font size
+
+    # Add numbers to each bar
+    for bar in bars:
+        ax.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height()/2,
+                f'{bar.get_width()}', va='center', ha='left', fontsize=9)
 
     # Add the subplot label in the top-left corner
     ax.text(-0.3, 1.05, label, transform=ax.transAxes, fontsize=16, fontweight='bold', va='top')
