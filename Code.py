@@ -12,7 +12,7 @@ fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(15, 10))
 axes = axes.flatten()
 
 # Define the maximum x-axis limits for each chart
-max_x_limits = [10, 300, 20, 160]  # Adjust these values as needed for each chart
+max_x_limits = [10, 300, 20, 200]  # Adjust these values as needed for each chart
 
 # Define labels for each subplot
 labels = ['A', 'B', 'C', 'D']
@@ -34,6 +34,7 @@ for ax, sheet_name, max_x, label in zip(axes, xls.sheet_names, max_x_limits, lab
     # Set the title and labels
     ax.set_title(sheet_name)
     ax.set_xlabel('Number of Genes')
+    ax.set_ylabel('GO term')
 
     # Set x-axis limits according to specified values
     ax.set_xlim(0, max_x)  # Set limit based on predefined max for each chart
@@ -43,7 +44,7 @@ for ax, sheet_name, max_x, label in zip(axes, xls.sheet_names, max_x_limits, lab
     ax.set_yticklabels(df['GO term'], fontsize=10)  # Adjust y-axis labels font size
 
     # Add the subplot label in the top-left corner
-    ax.text(-0.1, 1.05, label, transform=ax.transAxes, fontsize=16, fontweight='bold', va='top')
+    ax.text(-0.3, 1.05, label, transform=ax.transAxes, fontsize=16, fontweight='bold', va='top')
 
 # Adjust layout for better spacing
 plt.tight_layout()
