@@ -1,0 +1,52 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.lines import Line2D
+
+# Load the CSV file
+data_file = "canola_traits.csv"  # Update this to your file path
+data = pd.read_csv(data_file, encoding="latin1")
+
+# Extract cultivar names and traits
+cultivars = data.iloc[:, 0]
+traits = data.iloc[:, 1:]
+
+# Descriptive statistics
+print("Descriptive Statistics:")
+print(traits.describe())
+
+# Correlation matrix
+correlation_matrix = traits.corr()
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Trait Correlation Matrix", fontsize=14)  # Font size for the title
+plt.show()
+
+# Melt the data for facet wrapping
+melted_data = data.melt(id_vars=["Cultivar"], var_name="Trait", value_name="Value")
+
+# Define the color palette
+palette = sns.color_palette("tab20", len(melted_data["Cultivar"].unique()))
+
+# Create a FacetGrid for bar plots
+g = sns.FacetGrid(melted_data, col="Trait", col_wrap=4, height=3, sharex=True, sharey=False)
+g.map(sns.barplot, "Cultivar", "Value", palette=palette, order=melted_data["Cultivar"].unique())
+
+# Adjust the layout
+g.set_titles("{col_name}", fontsize=12)  # Font size for facet titles
+g.set_xticklabels(rotation=45, fontsize=7)  # Font size for x-axis tick labels
+g.set_axis_labels("Cultivars", "Mean Value", fontsize=10)  # Font size for axis labels
+g.fig.suptitle("Mean Trait Values Across Cultivars", y=1.02, fontsize=10)  # Font size for the suptitle
+
+# Add custom legend for cultivars
+# Create a legend manually using the color palette
+handles = [Line2D([0], [0], marker='o', color='w', markerfacecolor=palette[i], markersize=10)
+           for i in range(len(cultivars.unique()))]
+labels = list(cultivars.unique())
+
+# Add the legend to the plot
+plt.legend(handles=handles, labels=labels, title="Cultivars", bbox_to_anchor=(1.05, 4), loc='upper left', fontsize=9)
+
+# Adjust layout to fit everything
+plt.tight_layout()
+plt.show()
